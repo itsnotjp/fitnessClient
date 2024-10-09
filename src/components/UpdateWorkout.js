@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 export default function UpdateWorkout({workoutName, workoutDuration, workout, onUpdate}) {
 
@@ -19,9 +20,10 @@ export default function UpdateWorkout({workoutName, workoutDuration, workout, on
 
     return (
         <>
-
-            <Button variant="info" size="sm" onClick={showUpdate}>Update</Button>
-
+            <Link className='fs-2 pe-3 m-0 '  onClick={showUpdate}>
+            <i className="fas fa-pen-to-square text-black-50"></i>
+            </Link> 
+            
 
             <Modal show={showUpdateModal} onHide={closeUpdate}>
                 <Form onSubmit={(e) => submitUpdate(e, closeUpdate)}>

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // BS
 import { Container } from 'react-bootstrap';
 // CSS
-import './App.css';
+import './index.css';
 // UserContext
 import { UserProvider } from './UserContext';
 // Components

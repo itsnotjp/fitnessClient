@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Row, Col, Table, Badge, Button, Modal } from "react-bootstrap"
+import { Row, Col, Table, Badge, Button, Modal, Card } from "react-bootstrap"
 import Swal from "sweetalert2"
 
 import UserContext from '../UserContext';
@@ -14,7 +14,7 @@ export default function Workout() {
 
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
-    
+
 
     const [workouts, setWorkouts] = useState([])
 
@@ -92,23 +92,6 @@ export default function Workout() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // -----
     // DELETE
     // -----
@@ -167,20 +150,6 @@ export default function Workout() {
         });
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // -----
@@ -249,21 +218,6 @@ export default function Workout() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const fetchWorkout = () => {
 
         fetch("https://fitnessapi-beltran.onrender.com/workouts/getMyWorkouts", {
@@ -280,31 +234,42 @@ export default function Workout() {
                     // MAP
                     const workoutsArr = data.workouts.map(workout => {
                         return (
-                            <tr key={workout._id}>
 
-                                <td>
-                                    <h5>
-                                        <Badge bg={(workout.status === 'pending') ? 'secondary' : 'success'}>
-                                            {workout.status.charAt(0).toUpperCase() + workout.status.slice(1)}
-                                        </Badge>
-                                    </h5>
-                                </td>
+                            <>
 
-                                <td>{workout.name}</td>
-                                <td>{workout.duration}</td>
+                                <Card className="p-0 m-3 " key={workout._id} >
 
-                                <td>
-                                    {/* {name, duration, workout, onUpdate} */}
-                                    {<UpdateWorkout workoutName={workout.name} workoutDuration={workout.duration} workout={workout._id} onUpdate={updateWorkout} />}
-                                </td>
-                                <td>
-                                    {<DeleteWorkout workout={workout._id} onDelete={deleteWorkout} />}
-                                </td>
-                                <td>
-                                    {<CompletedWorkout status={workout.status} workout={workout._id} onDone={completedWorkout} />}
-                                </td>
+                                    <div className="wc-header d-flex justify-content-between ">
+                                        <div className={` wc-status text-center px-3 bg-gradient d-flex align-items-center  ${workout.status === 'pending' ? 'bg-secondary' : 'bg-success'}`} >
+                                            <span className='fw-semibold text-light' >
+                                                {workout.status.charAt(0).toUpperCase() + workout.status.slice(1)}
+                                            </span>
+                                        </div>
+                                        <div className="wc-options d-flex align-items-center">
+                                            {<UpdateWorkout workoutName={workout.name} workoutDuration={workout.duration} workout={workout._id} onUpdate={updateWorkout} />}
+                                            {<DeleteWorkout workout={workout._id} onDelete={deleteWorkout} />}
+                                        </div>
+                                    </div>
 
-                            </tr>
+                                    <Card.Body>
+
+
+                                        <Card.Title className="mb-2 text-center">{workout.name}</Card.Title>
+                                        <Card.Text className="mb-2 text-center ">
+                                            <i className="fas fa-clock text-black-50"></i> {workout.duration}
+                                        </Card.Text>
+
+
+
+                                    </Card.Body>
+                                    <Card.Footer className="d-flex justify-content-center">
+                                        {<CompletedWorkout status={workout.status} workout={workout._id} onDone={completedWorkout} />}
+                                    </Card.Footer>
+
+                                </Card>
+
+
+                            </>
                         )
                     })
 
@@ -325,48 +290,45 @@ export default function Workout() {
         if (!user.id) {
             navigate('/login');
         }
-    
+
 
         fetchWorkout(); //
         // console.log("setWorkoutsArr:", workouts);
 
     }, [addWorkout, user.id, navigate])
 
-
     return (
         <>
-            <Row>
-                <Col className="p-4 text-center">
-                    <h1>Your Workout Plans</h1>
-                    <p></p>
+            <Row className="justify-content-center">
+                <Col className="col-md-10 col-lg-7  ">
+                    <Row>
+                        <Col className="p-4 text-center">
+                            <h1>Workout Plans</h1>
+                            <p></p>
+
+                            <Button className="py-2 px-4 fw-semibold" variant="primary" onClick={showAddWorkoutModal}>
+                                Add New Workout
+                            </Button>
+                        </Col>
+
+                    </Row>
+
+
+
+                    <Row>
+
+
+                        <AddWorkout show={addWorkoutModal} handleClose={closeAddWorkoutModal} onAdd={addWorkout} />
+                    </Row>
+
+
+                    <Row>
+                        <Col>
+                            {workouts}
+                        </Col>
+                    </Row>
+
                 </Col>
-            </Row>
-            <Row>
-                <Button variant="success" onClick={showAddWorkoutModal}>
-                    ADD WORKOUT
-                </Button>
-
-                <AddWorkout show={addWorkoutModal} handleClose={closeAddWorkoutModal} onAdd={addWorkout} />
-            </Row>
-
-            <Row>
-
-
-
-                <Table striped bordered hover responsive>
-                    <thead>
-                        <tr className="text-center">
-                            <th>Status</th>
-                            <th>Name</th>
-                            <th>Duration</th>
-                            <th colSpan={3}>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {workouts}
-                    </tbody>
-                </Table>
             </Row>
 
 
